@@ -1,0 +1,11 @@
+package com.ephemetra.server.model.props;
+
+import lombok.Data;
+
+@Data
+public class ChatGLMLLM {
+    public String type;
+    public String modelName;
+    public String url;
+    public String apiKey;
+}
