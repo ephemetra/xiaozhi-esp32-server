@@ -1,6 +1,6 @@
 package com.ephemetra.server.core;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.*;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -17,7 +17,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @RequiredArgsConstructor
 public class WebSocketServer {
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     private EventLoopGroup bossGroup;
     private EventLoopGroup workerGroup;

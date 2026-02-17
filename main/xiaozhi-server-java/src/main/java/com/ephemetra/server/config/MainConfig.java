@@ -1,25 +1,31 @@
 package com.ephemetra.server.config;
 
 import com.ephemetra.server.model.props.*;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonProperty;
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * 小智服务器统一配置类
  */
 @Data
-
 @ConfigurationProperties
-public class XiaozhiConfig {
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
+@JsonIgnoreProperties(ignoreUnknown = true)
+public class MainConfig {
 
     /*********************************以下是服务器基本运行配置***************************************/
 
     /**
      * manager-api信息
      */
-    public ManagerApi managerApi;
+    public ManagerApi managerApi = new ManagerApi();
 
     /**
      * 服务器基本运行配置
@@ -151,11 +157,13 @@ public class XiaozhiConfig {
     /**
      * 语音识别配置
      */
+    @JsonProperty("ASR")
     public Asr asr;
 
     /**
      * 语音活动检测
      */
+    @JsonProperty("VAD")
     public Vad vad;
 
     /**
@@ -172,4 +180,15 @@ public class XiaozhiConfig {
      * 语音合成配置
      */
     public Tts tts;
+
+    /**
+     * 其他配置
+     */
+    public Map log;
+    public int deviceMaxOutputSize;
+    @JsonProperty("system-web")
+    public Map systemWeb;
+    public Object summaryMemory;
+    public String systemErrorResponse;
+    public Object aliyun;
 }

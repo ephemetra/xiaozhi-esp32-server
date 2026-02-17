@@ -1,6 +1,6 @@
 package com.ephemetra.server.core.providers.asr;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import com.ephemetra.server.core.ConnectionHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.scheduling.annotation.Async;
@@ -10,7 +10,7 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 public abstract class ASRBaseProvider {
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     /**
      * 打开音频通道

@@ -1,12 +1,12 @@
 package com.ephemetra.server.core.providers.memory;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 
 @RequiredArgsConstructor
 public abstract class MemoryBaseProvider {
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     @Setter
     private Object llm;

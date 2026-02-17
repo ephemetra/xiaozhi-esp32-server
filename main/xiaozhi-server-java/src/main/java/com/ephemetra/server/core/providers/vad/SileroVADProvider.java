@@ -1,11 +1,11 @@
 package com.ephemetra.server.core.providers.vad;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import com.ephemetra.server.core.ConnectionHandler;
 
-public class SileroVADBaseProvider extends VADBaseProvider {
+public class SileroVADProvider extends VADBaseProvider {
 
-    public SileroVADBaseProvider(XiaozhiConfig config) {
+    public SileroVADProvider(MainConfig config) {
         super(config);
     }
 

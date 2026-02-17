@@ -1,8 +1,11 @@
 package com.ephemetra.server.model.props;
 
+import com.fasterxml.jackson.databind.PropertyNamingStrategies;
+import com.fasterxml.jackson.databind.annotation.JsonNaming;
 import lombok.Data;
 
 @Data
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class Server {
     /**
      * 服务器监听地址和端口
@@ -49,4 +52,36 @@ public class Server {
      * 用于jwt认证，比如视觉分析接口的jwt认证、ota接口的token生成与websocket认证
      */
     public String authKey;
+
+    /**
+     * 其他配置
+     */
+    private Integer smsMaxSendCount;
+    public String publicKey;
+    public String privateKey;
+    public String secret;
+    public String frontedUrl;
+    private String beianGaNum;
+    private Boolean allowUserRegister;
+    private Boolean enableMobileRegister;
+    private String mqttManagerApi;
+    private String name;
+    private String mcpEndpoint;
+    private String voicePrint;
+    private String ota;
+    private String beianIcpNum;
+    private Double voiceprintSimilarityThreshold;
+
+    public Server() {
+    }
+
+    public Server(String ip, Integer wsPort, Integer httpPort, String visionExplain, String authKey) {
+        this.ip = ip;
+        this.wsPort = wsPort;
+        this.httpPort = httpPort;
+        this.visionExplain = visionExplain;
+        this.authKey = authKey;
+    }
+
+
 }

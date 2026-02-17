@@ -1,7 +1,7 @@
 package com.ephemetra.server.core;
 
 import cn.hutool.core.thread.ThreadUtil;
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import com.ephemetra.server.model.props.Xiaozhi;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 @Slf4j
 public class ConnectionHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
 
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     public HttpHeaders headers;
     public String clientIp;
@@ -35,7 +35,7 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<TextWebSocket
     public boolean needBind;
     public CompletableFuture bindCompletedEvent = new CompletableFuture<>();
 
-    public ConnectionHandler(XiaozhiConfig config) {
+    public ConnectionHandler(MainConfig config) {
         this.config = config;
         this.readConfigFromApi = this.config.readConfigFromApi;
     }

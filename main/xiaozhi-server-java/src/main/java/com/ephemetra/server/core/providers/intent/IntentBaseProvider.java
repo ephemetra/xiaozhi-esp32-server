@@ -1,6 +1,6 @@
 package com.ephemetra.server.core.providers.intent;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import com.ephemetra.server.core.ConnectionHandler;
 import lombok.RequiredArgsConstructor;
 import lombok.Setter;
@@ -9,7 +9,7 @@ import java.util.List;
 
 @RequiredArgsConstructor
 public abstract class IntentBaseProvider {
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     @Setter
     private Object llm;

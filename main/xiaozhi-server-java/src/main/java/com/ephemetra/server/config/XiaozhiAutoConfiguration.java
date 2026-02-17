@@ -1,25 +1,29 @@
 package com.ephemetra.server.config;
 
-import com.ephemetra.server.core.providers.asr.*;
+import com.ephemetra.server.core.providers.asr.ASRBaseProvider;
+import com.ephemetra.server.core.providers.asr.FunASRProvider;
+import com.ephemetra.server.core.providers.intent.FunctionCallIntentProvider;
 import com.ephemetra.server.core.providers.intent.IntentBaseProvider;
+import com.ephemetra.server.core.providers.llm.ChatGLMLLMProvider;
 import com.ephemetra.server.core.providers.llm.LLMBaseProvider;
 import com.ephemetra.server.core.providers.memory.MemoryBaseProvider;
+import com.ephemetra.server.core.providers.memory.NoMemoryProvider;
+import com.ephemetra.server.core.providers.tts.EdgeTTSProvider;
 import com.ephemetra.server.core.providers.tts.TTSBaseProvider;
-import com.ephemetra.server.core.providers.vad.SileroVADBaseProvider;
+import com.ephemetra.server.core.providers.vad.SileroVADProvider;
 import com.ephemetra.server.core.providers.vad.VADBaseProvider;
-import com.ephemetra.server.core.providers.vllm.VLLMBaseProvider;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnProperty;
 import org.springframework.boot.context.properties.EnableConfigurationProperties;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 
 /**
  * 项目模块
  */
 @Slf4j
-@AutoConfiguration
-@EnableConfigurationProperties(XiaozhiConfig.class)
+@Configuration
+@EnableConfigurationProperties(MainConfig.class)
 public class XiaozhiAutoConfiguration {
 
     /*
@@ -30,8 +34,8 @@ public class XiaozhiAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "selected_module.VAD", havingValue = "SileroVAD")
-    public VADBaseProvider sileroVAD(XiaozhiConfig config) {
-        return new SileroVADBaseProvider(config);
+    public VADBaseProvider sileroVAD(MainConfig config) {
+        return new SileroVADProvider(config);
     }
 
     /*
@@ -42,99 +46,99 @@ public class XiaozhiAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "FunASR")
-    public ASRBaseProvider funASR(XiaozhiConfig config) {
-        return new FunASRBaseProvider(config);
+    public ASRBaseProvider funASR(MainConfig config) {
+        return new FunASRProvider(config);
     }
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "FunASRServer")
-    public ASRBaseProvider funASRServer(XiaozhiConfig config) {
-        return new FunASRServerBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "SherpaASR")
-    public ASRBaseProvider sherpaASR(XiaozhiConfig config) {
-        return new SherpaASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "SherpaParaformerASR")
-    public ASRBaseProvider sherpaParaformerASR(XiaozhiConfig config) {
-        return new SherpaParaformerASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "DoubaoASR")
-    public ASRBaseProvider doubaoASR(XiaozhiConfig config) {
-        return new DoubaoASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "DoubaoStreamASR")
-    public ASRBaseProvider doubaoStreamASR(XiaozhiConfig config) {
-        return new DoubaoStreamASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "TencentASR")
-    public ASRBaseProvider tencentASR(XiaozhiConfig config) {
-        return new TencentASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "AliyunASR")
-    public ASRBaseProvider aliyunASR(XiaozhiConfig config) {
-        return new AliyunASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "AliyunStreamASR")
-    public ASRBaseProvider aliyunStreamASR(XiaozhiConfig config) {
-        return new AliyunStreamASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "BaiduASR")
-    public ASRBaseProvider baiduASR(XiaozhiConfig config) {
-        return new BaiduASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "OpenaiASR")
-    public ASRBaseProvider openaiASR(XiaozhiConfig config) {
-        return new OpenaiASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "GroqASR")
-    public ASRBaseProvider groqASR(XiaozhiConfig config) {
-        return new GroqASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "VoskASR")
-    public ASRBaseProvider voskASR(XiaozhiConfig config) {
-        return new VoskASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "Qwen3ASRFlash")
-    public ASRBaseProvider qwen3ASRFlash(XiaozhiConfig config) {
-        return new Qwen3ASRFlashBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "XunfeiStreamASR")
-    public ASRBaseProvider xunfeiStreamASR(XiaozhiConfig config) {
-        return new XunfeiStreamASRBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "AliyunBLStreamASR")
-    public ASRBaseProvider aliyunBLStreamASR(XiaozhiConfig config) {
-        return new AliyunBLStreamASRBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "FunASRServer")
+//    public ASRBaseProvider funASRServer(MainConfig config) {
+//        return new FunASRServerProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "SherpaASR")
+//    public ASRBaseProvider sherpaASR(MainConfig config) {
+//        return new SherpaASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "SherpaParaformerASR")
+//    public ASRBaseProvider sherpaParaformerASR(MainConfig config) {
+//        return new SherpaParaformerASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "DoubaoASR")
+//    public ASRBaseProvider doubaoASR(MainConfig config) {
+//        return new DoubaoASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "DoubaoStreamASR")
+//    public ASRBaseProvider doubaoStreamASR(MainConfig config) {
+//        return new DoubaoStreamASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "TencentASR")
+//    public ASRBaseProvider tencentASR(MainConfig config) {
+//        return new TencentASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "AliyunASR")
+//    public ASRBaseProvider aliyunASR(MainConfig config) {
+//        return new AliyunASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "AliyunStreamASR")
+//    public ASRBaseProvider aliyunStreamASR(MainConfig config) {
+//        return new AliyunStreamASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "BaiduASR")
+//    public ASRBaseProvider baiduASR(MainConfig config) {
+//        return new BaiduASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "OpenaiASR")
+//    public ASRBaseProvider openaiASR(MainConfig config) {
+//        return new OpenaiASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "GroqASR")
+//    public ASRBaseProvider groqASR(MainConfig config) {
+//        return new GroqASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "VoskASR")
+//    public ASRBaseProvider voskASR(MainConfig config) {
+//        return new VoskASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "Qwen3ASRFlash")
+//    public ASRBaseProvider qwen3ASRFlash(MainConfig config) {
+//        return new Qwen3ASRFlashProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "XunfeiStreamASR")
+//    public ASRBaseProvider xunfeiStreamASR(MainConfig config) {
+//        return new XunfeiStreamASRProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.ASR", havingValue = "AliyunBLStreamASR")
+//    public ASRBaseProvider aliyunBLStreamASR(MainConfig config) {
+//        return new AliyunBLStreamASRProvider(config);
+//    }
 
     /*
      * =======================================================================
@@ -142,95 +146,95 @@ public class XiaozhiAutoConfiguration {
      * =======================================================================
      */
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "AliLLM")
-    public LLMBaseProvider aliLLM(XiaozhiConfig config) {
-        return new AliLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "AliAppLLM")
-    public LLMBaseProvider aliAppLLM(XiaozhiConfig config) {
-        return new AliAppLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "DoubaoLLM")
-    public LLMBaseProvider doubaoLLM(XiaozhiConfig config) {
-        return new DoubaoLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "DeepSeekLLM")
-    public LLMBaseProvider deepSeekLLM(XiaozhiConfig config) {
-        return new DeepSeekLLMBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "AliLLM")
+//    public LLMBaseProvider aliLLM(MainConfig config) {
+//        return new AliLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "AliAppLLM")
+//    public LLMBaseProvider aliAppLLM(MainConfig config) {
+//        return new AliAppLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "DoubaoLLM")
+//    public LLMBaseProvider doubaoLLM(MainConfig config) {
+//        return new DoubaoLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "DeepSeekLLM")
+//    public LLMBaseProvider deepSeekLLM(MainConfig config) {
+//        return new DeepSeekLLMProvider(config);
+//    }
 
     @Bean
     @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "ChatGLMLLM")
-    public LLMBaseProvider chatGLMLLM(XiaozhiConfig config) {
-        return new ChatGLMLLMBaseProvider(config);
+    public LLMBaseProvider chatGLMLLM(MainConfig config) {
+        return new ChatGLMLLMProvider(config);
     }
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "OllamaLLM")
-    public LLMBaseProvider ollamaLLM(XiaozhiConfig config) {
-        return new OllamaLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "DifyLLM")
-    public LLMBaseProvider difyLLM(XiaozhiConfig config) {
-        return new DifyLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "GeminiLLM")
-    public LLMBaseProvider geminiLLM(XiaozhiConfig config) {
-        return new GeminiLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "CozeLLM")
-    public LLMBaseProvider cozeLLM(XiaozhiConfig config) {
-        return new CozeLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "VolcesAiGatewayLLM")
-    public LLMBaseProvider volcesAiGatewayLLM(XiaozhiConfig config) {
-        return new VolcesAiGatewayLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "LMStudioLLM")
-    public LLMBaseProvider lmStudioLLM(XiaozhiConfig config) {
-        return new LMStudioLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "HomeAssistant")
-    public LLMBaseProvider homeAssistantLLM(XiaozhiConfig config) {
-        return new HomeAssistantBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "FastgptLLM")
-    public LLMBaseProvider fastgptLLM(XiaozhiConfig config) {
-        return new FastgptLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "XinferenceLLM")
-    public LLMBaseProvider xinferenceLLM(XiaozhiConfig config) {
-        return new XinferenceLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "XinferenceSmallLLM")
-    public LLMBaseProvider xinferenceSmallLLM(XiaozhiConfig config) {
-        return new XinferenceSmallLLMBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "OllamaLLM")
+//    public LLMBaseProvider ollamaLLM(MainConfig config) {
+//        return new OllamaLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "DifyLLM")
+//    public LLMBaseProvider difyLLM(MainConfig config) {
+//        return new DifyLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "GeminiLLM")
+//    public LLMBaseProvider geminiLLM(MainConfig config) {
+//        return new GeminiLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "CozeLLM")
+//    public LLMBaseProvider cozeLLM(MainConfig config) {
+//        return new CozeLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "VolcesAiGatewayLLM")
+//    public LLMBaseProvider volcesAiGatewayLLM(MainConfig config) {
+//        return new VolcesAiGatewayLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "LMStudioLLM")
+//    public LLMBaseProvider lmStudioLLM(MainConfig config) {
+//        return new LMStudioLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "HomeAssistant")
+//    public LLMBaseProvider homeAssistantLLM(MainConfig config) {
+//        return new HomeAssistantProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "FastgptLLM")
+//    public LLMBaseProvider fastgptLLM(MainConfig config) {
+//        return new FastgptLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "XinferenceLLM")
+//    public LLMBaseProvider xinferenceLLM(MainConfig config) {
+//        return new XinferenceLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.LLM", havingValue = "XinferenceSmallLLM")
+//    public LLMBaseProvider xinferenceSmallLLM(MainConfig config) {
+//        return new XinferenceSmallLLMProvider(config);
+//    }
 
     /*
      * =======================================================================
@@ -238,23 +242,23 @@ public class XiaozhiAutoConfiguration {
      * =======================================================================
      */
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.VLLM", havingValue = "ChatGLMVLLM")
-    public VLLMBaseProvider chatGLMVLLM(XiaozhiConfig config) {
-        return new ChatGLMVLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.VLLM", havingValue = "QwenVLVLLM")
-    public VLLMBaseProvider qwenVLVLLM(XiaozhiConfig config) {
-        return new QwenVLVLLMBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.VLLM", havingValue = "XunfeiSparkLLM")
-    public VLLMBaseProvider xunfeiSparkLLM(XiaozhiConfig config) {
-        return new XunfeiSparkLLMBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.VLLM", havingValue = "ChatGLMVLLM")
+//    public VLLMBaseProvider chatGLMVLLM(MainConfig config) {
+//        return new ChatGLMVLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.VLLM", havingValue = "QwenVLVLLM")
+//    public VLLMBaseProvider qwenVLVLLM(MainConfig config) {
+//        return new QwenVLVLLMProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.VLLM", havingValue = "XunfeiSparkLLM")
+//    public VLLMBaseProvider xunfeiSparkLLM(MainConfig config) {
+//        return new XunfeiSparkLLMProvider(config);
+//    }
 
     /*
      * =======================================================================
@@ -264,141 +268,141 @@ public class XiaozhiAutoConfiguration {
 
     @Bean
     @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "EdgeTTS")
-    public TTSBaseProvider edgeTTS(XiaozhiConfig config) {
-        return new EdgeTTSBaseProvider(config);
+    public TTSBaseProvider edgeTTS(MainConfig config) {
+        return new EdgeTTSProvider(config);
     }
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "DoubaoTTS")
-    public TTSBaseProvider doubaoTTS(XiaozhiConfig config) {
-        return new DoubaoTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "HuoshanDoubleStreamTTS")
-    public TTSBaseProvider huoshanDoubleStreamTTS(XiaozhiConfig config) {
-        return new HuoshanDoubleStreamTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "CosyVoiceSiliconflow")
-    public TTSBaseProvider cosyVoiceSiliconflow(XiaozhiConfig config) {
-        return new CosyVoiceSiliconflowBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "CozeCnTTS")
-    public TTSBaseProvider cozeCnTTS(XiaozhiConfig config) {
-        return new CozeCnTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "VolcesAiGatewayTTS")
-    public TTSBaseProvider volcesAiGatewayTTS(XiaozhiConfig config) {
-        return new VolcesAiGatewayTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "FishSpeech")
-    public TTSBaseProvider fishSpeech(XiaozhiConfig config) {
-        return new FishSpeechBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "GPT_SOVITS_V2")
-    public TTSBaseProvider gptSovitsV2(XiaozhiConfig config) {
-        return new GPTSovitsV2BaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "GPT_SOVITS_V3")
-    public TTSBaseProvider gptSovitsV3(XiaozhiConfig config) {
-        return new GPTSovitsV3BaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "MinimaxTTSHTTPStream")
-    public TTSBaseProvider minimaxTTSHTTPStream(XiaozhiConfig config) {
-        return new MinimaxTTSHTTPStreamBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "AliyunTTS")
-    public TTSBaseProvider aliyunTTS(XiaozhiConfig config) {
-        return new AliyunTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "AliyunStreamTTS")
-    public TTSBaseProvider aliyunStreamTTS(XiaozhiConfig config) {
-        return new AliyunStreamTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "TencentTTS")
-    public TTSBaseProvider tencentTTS(XiaozhiConfig config) {
-        return new TencentTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "TTS302AI")
-    public TTSBaseProvider tts302AI(XiaozhiConfig config) {
-        return new TTS302AIBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "GizwitsTTS")
-    public TTSBaseProvider gizwitsTTS(XiaozhiConfig config) {
-        return new GizwitsTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "ACGNTTS")
-    public TTSBaseProvider acgnTTS(XiaozhiConfig config) {
-        return new ACGNTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "OpenAITTS")
-    public TTSBaseProvider openAITTS(XiaozhiConfig config) {
-        return new OpenAITTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "CustomTTS")
-    public TTSBaseProvider customTTS(XiaozhiConfig config) {
-        return new CustomTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "LinkeraiTTS")
-    public TTSBaseProvider linkeraiTTS(XiaozhiConfig config) {
-        return new LinkeraiTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "PaddleSpeechTTS")
-    public TTSBaseProvider paddleSpeechTTS(XiaozhiConfig config) {
-        return new PaddleSpeechTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "IndexStreamTTS")
-    public TTSBaseProvider indexStreamTTS(XiaozhiConfig config) {
-        return new IndexStreamTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "AliBLTTS")
-    public TTSBaseProvider aliBLTTS(XiaozhiConfig config) {
-        return new AliBLTTSBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "XunFeiTTS")
-    public TTSBaseProvider xunFeiTTS(XiaozhiConfig config) {
-        return new XunFeiTTSBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "DoubaoTTS")
+//    public TTSBaseProvider doubaoTTS(MainConfig config) {
+//        return new DoubaoTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "HuoshanDoubleStreamTTS")
+//    public TTSBaseProvider huoshanDoubleStreamTTS(MainConfig config) {
+//        return new HuoshanDoubleStreamTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "CosyVoiceSiliconflow")
+//    public TTSBaseProvider cosyVoiceSiliconflow(MainConfig config) {
+//        return new CosyVoiceSiliconflowProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "CozeCnTTS")
+//    public TTSBaseProvider cozeCnTTS(MainConfig config) {
+//        return new CozeCnTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "VolcesAiGatewayTTS")
+//    public TTSBaseProvider volcesAiGatewayTTS(MainConfig config) {
+//        return new VolcesAiGatewayTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "FishSpeech")
+//    public TTSBaseProvider fishSpeech(MainConfig config) {
+//        return new FishSpeechProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "GPT_SOVITS_V2")
+//    public TTSBaseProvider gptSovitsV2(MainConfig config) {
+//        return new GPTSovitsV2Provider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "GPT_SOVITS_V3")
+//    public TTSBaseProvider gptSovitsV3(MainConfig config) {
+//        return new GPTSovitsV3Provider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "MinimaxTTSHTTPStream")
+//    public TTSBaseProvider minimaxTTSHTTPStream(MainConfig config) {
+//        return new MinimaxTTSHTTPStreamProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "AliyunTTS")
+//    public TTSBaseProvider aliyunTTS(MainConfig config) {
+//        return new AliyunTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "AliyunStreamTTS")
+//    public TTSBaseProvider aliyunStreamTTS(MainConfig config) {
+//        return new AliyunStreamTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "TencentTTS")
+//    public TTSBaseProvider tencentTTS(MainConfig config) {
+//        return new TencentTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "TTS302AI")
+//    public TTSBaseProvider tts302AI(MainConfig config) {
+//        return new TTS302AIProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "GizwitsTTS")
+//    public TTSBaseProvider gizwitsTTS(MainConfig config) {
+//        return new GizwitsTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "ACGNTTS")
+//    public TTSBaseProvider acgnTTS(MainConfig config) {
+//        return new ACGNTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "OpenAITTS")
+//    public TTSBaseProvider openAITTS(MainConfig config) {
+//        return new OpenAITTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "CustomTTS")
+//    public TTSBaseProvider customTTS(MainConfig config) {
+//        return new CustomTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "LinkeraiTTS")
+//    public TTSBaseProvider linkeraiTTS(MainConfig config) {
+//        return new LinkeraiTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "PaddleSpeechTTS")
+//    public TTSBaseProvider paddleSpeechTTS(MainConfig config) {
+//        return new PaddleSpeechTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "IndexStreamTTS")
+//    public TTSBaseProvider indexStreamTTS(MainConfig config) {
+//        return new IndexStreamTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "AliBLTTS")
+//    public TTSBaseProvider aliBLTTS(MainConfig config) {
+//        return new AliBLTTSProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.TTS", havingValue = "XunFeiTTS")
+//    public TTSBaseProvider xunFeiTTS(MainConfig config) {
+//        return new XunFeiTTSProvider(config);
+//    }
 
     /*
      * =======================================================================
@@ -406,23 +410,23 @@ public class XiaozhiAutoConfiguration {
      * =======================================================================
      */
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.Memory", havingValue = "mem0ai")
-    public MemoryBaseProvider mem0aiMemory(XiaozhiConfig config) {
-        return new Mem0aiMemoryBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.Memory", havingValue = "mem0ai")
+//    public MemoryBaseProvider mem0aiMemory(MainConfig config) {
+//        return new Mem0aiMemoryProvider(config);
+//    }
 
     @Bean
     @ConditionalOnProperty(name = "selected_module.Memory", havingValue = "nomem")
-    public MemoryBaseProvider noMemory(XiaozhiConfig config) {
-        return new NoMemoryBaseProvider(config);
+    public MemoryBaseProvider noMemory(MainConfig config) {
+        return new NoMemoryProvider(config);
     }
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.Memory", havingValue = "mem_local_short")
-    public MemoryBaseProvider memLocalShort(XiaozhiConfig config) {
-        return new MemLocalShortBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.Memory", havingValue = "mem_local_short")
+//    public MemoryBaseProvider memLocalShort(MainConfig config) {
+//        return new MemLocalShortProvider(config);
+//    }
 
     /*
      * =======================================================================
@@ -430,21 +434,21 @@ public class XiaozhiAutoConfiguration {
      * =======================================================================
      */
 
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.Intent", havingValue = "nointent")
-    public IntentBaseProvider noIntent(XiaozhiConfig config) {
-        return new NoIntentBaseProvider(config);
-    }
-
-    @Bean
-    @ConditionalOnProperty(name = "selected_module.Intent", havingValue = "intent_llm")
-    public IntentBaseProvider intentLLM(XiaozhiConfig config) {
-        return new IntentLLMBaseProvider(config);
-    }
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.Intent", havingValue = "nointent")
+//    public IntentBaseProvider noIntent(MainConfig config) {
+//        return new NoIntentProvider(config);
+//    }
+//
+//    @Bean
+//    @ConditionalOnProperty(name = "selected_module.Intent", havingValue = "intent_llm")
+//    public IntentBaseProvider intentLLM(MainConfig config) {
+//        return new IntentLLMProvider(config);
+//    }
 
     @Bean
     @ConditionalOnProperty(name = "selected_module.Intent", havingValue = "function_call")
-    public IntentBaseProvider functionCallIntent(XiaozhiConfig config) {
-        return new FunctionCallIntentBaseProvider(config);
+    public IntentBaseProvider functionCallIntent(MainConfig config) {
+        return new FunctionCallIntentProvider(config);
     }
 }

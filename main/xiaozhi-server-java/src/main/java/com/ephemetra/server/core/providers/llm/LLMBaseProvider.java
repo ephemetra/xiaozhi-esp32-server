@@ -1,13 +1,13 @@
 package com.ephemetra.server.core.providers.llm;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
 
 @RequiredArgsConstructor
 public abstract class LLMBaseProvider {
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     /**
      * 请求大模型生成回复

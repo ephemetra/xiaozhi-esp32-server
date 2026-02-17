@@ -1,6 +1,6 @@
 package com.ephemetra.server.core.providers.tts;
 
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import com.ephemetra.server.core.ConnectionHandler;
 import lombok.RequiredArgsConstructor;
 
@@ -9,7 +9,7 @@ import java.util.function.Function;
 
 @RequiredArgsConstructor
 public abstract class TTSBaseProvider {
-    private final XiaozhiConfig config;
+    private final MainConfig config;
 
     public String generateFilename() {
         return this.generateFilename(".wav");

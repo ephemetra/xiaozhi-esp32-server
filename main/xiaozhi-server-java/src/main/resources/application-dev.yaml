@@ -14,6 +14,6 @@ manager-api:
   # 如果使用docker部署，请使用填写成 http://xiaozhi-esp32-server-web:8002/xiaozhi
   url: http://127.0.0.1:8002/xiaozhi
   # 你的manager-api的token，就是刚才复制出来的server.secret
-  secret: efc50b2f-a69d-4e47-9f99-2970c7ffe5df
+  secret: 3c903eb4-1af4-4523-8bd8-1a1e2c56e4c2
 # 默认系统提示词模板文件
 prompt_template: agent-base-prompt.txt

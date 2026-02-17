@@ -1,7 +1,7 @@
 package com.ephemetra.server;
 
 import cn.hutool.core.thread.ThreadUtil;
-import com.ephemetra.server.config.XiaozhiConfig;
+import com.ephemetra.server.config.MainConfig;
 import com.ephemetra.server.core.WebSocketServer;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
@@ -11,7 +11,6 @@ import org.springframework.cloud.openfeign.EnableFeignClients;
 import java.util.UUID;
 
 import static com.ephemetra.server.config.ConfigLoader.loadConfig;
-import static com.ephemetra.server.utils.FFmpegUtils.checkFFmpegInstalled;
 import static com.ephemetra.server.utils.NetworkUtils.getLocalIp;
 
 @Slf4j
@@ -21,8 +20,8 @@ public class XiaozhiJavaApplication {
 
     public static void main(String[] args) {
         SpringApplication.run(XiaozhiJavaApplication.class, args);
-        checkFFmpegInstalled();
-        XiaozhiConfig config = loadConfig();
+//        checkFFmpegInstalled();
+        MainConfig config = loadConfig();
         // 优先级：配置文件server.auth_key > manager-api.secret > 自动生成
         String authKey = config.server.authKey;
         // 验证auth_key，无效则尝试使用manager-api.secret

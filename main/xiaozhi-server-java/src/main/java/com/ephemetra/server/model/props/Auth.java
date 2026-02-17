@@ -14,4 +14,11 @@ public class Auth {
      * 白名单设备ID列表
      */
     public List<String> allowedDevices;
+
+    public Auth() {
+    }
+
+    public Auth(boolean enabled) {
+        this.enabled = enabled;
+    }
 }
