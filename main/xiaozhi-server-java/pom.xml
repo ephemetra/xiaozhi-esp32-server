@@ -18,6 +18,7 @@
         <java.version>21</java.version>
         <hutool.version>5.8.20</hutool.version>
         <spring-cloud.version>2024.0.1</spring-cloud.version>
+        <sedmelluq.version>2.2.1</sedmelluq.version>
     </properties>
 
     <dependencyManagement>
@@ -58,6 +59,13 @@
             <groupId>cn.hutool</groupId>
             <artifactId>hutool-all</artifactId>
             <version>${hutool.version}</version>
+        </dependency>
+
+        <!--Python的opuslib_next库，这里直接使用 JNA 调用系统的C语言库 libopus-->
+        <dependency>
+            <groupId>net.java.dev.jna</groupId>
+            <artifactId>jna</artifactId>
+            <version>5.13.0</version>
         </dependency>
     </dependencies>
 

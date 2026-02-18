@@ -8,8 +8,8 @@ import lombok.Data;
 @JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy.class)
 public class SileroVAD {
     public String type;
-    public Double threshold;
-    public Double thresholdLow;
+    public Float threshold;
+    public Float thresholdLow;
     public String modelDir;
     public Integer minSilenceDurationMs;
 }

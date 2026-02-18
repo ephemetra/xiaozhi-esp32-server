@@ -2,21 +2,28 @@ package com.ephemetra.server.core;
 
 import cn.hutool.core.thread.ThreadUtil;
 import com.ephemetra.server.config.MainConfig;
+import com.ephemetra.server.core.providers.vad.VADBaseProvider;
 import com.ephemetra.server.model.props.Xiaozhi;
+import io.netty.buffer.ByteBuf;
+import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.handler.codec.http.HttpHeaders;
+import io.netty.handler.codec.http.websocketx.BinaryWebSocketFrame;
 import io.netty.handler.codec.http.websocketx.TextWebSocketFrame;
+import io.netty.handler.codec.http.websocketx.WebSocketFrame;
 import io.netty.handler.codec.http.websocketx.WebSocketServerProtocolHandler;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
 
 import java.net.InetSocketAddress;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Future;
 
 @Slf4j
-public class ConnectionHandler extends SimpleChannelInboundHandler<TextWebSocketFrame> {
+public class ConnectionHandler extends SimpleChannelInboundHandler<WebSocketFrame> {
 
     private final MainConfig config;
 
@@ -25,12 +32,27 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<TextWebSocket
     public String deviceId;
     private ChannelHandlerContext websocket;
     public boolean connFromMqttGateway;
-    public long firstActivityTime;
-    public long lastActivityTime;
     public int sampleRate;
     public Xiaozhi welcomeMsg;
     public Future<?> timeoutTask;
     public Boolean readConfigFromApi;
+
+    // 客户端状态相关
+    public String clientListenMode = "auto";
+
+    // 依赖的组件
+    public VADBaseProvider vad;
+
+    // vad相关变量
+    public ByteBuf clientAudioBuffer = Unpooled.buffer(32 * 1024, 1024 * 1024);
+    public boolean clientHaveVoice = false;
+    public List<Boolean> clientVoiceWindow = new ArrayList<>(5);
+    public long firstActivityTime = 0;  // 记录首次活动的时间（毫秒）
+    public long lastActivityTime = 0;   // 统一的活动时间戳（毫秒）
+    public boolean clientVoiceStop = false;
+    public boolean lastIsVoice = false;
+    public int maxWindowSize = 5;
+
     // 是否需要绑定设备
     public boolean needBind;
     public CompletableFuture bindCompletedEvent = new CompletableFuture<>();
@@ -85,18 +107,40 @@ public class ConnectionHandler extends SimpleChannelInboundHandler<TextWebSocket
 
 
     @Override
-    protected void channelRead0(ChannelHandlerContext ctx, TextWebSocketFrame frame) {
-        // 更新最后活跃时间
-        this.lastActivityTime = System.currentTimeMillis();
-
-        String text = frame.text();
-        // routeMessage(text);
+    protected void channelRead0(ChannelHandlerContext ctx, WebSocketFrame frame) {
+        if (frame instanceof TextWebSocketFrame) {
+            String request = ((TextWebSocketFrame) frame).text();
+            System.out.println("文本消息: " + request);
+            ctx.writeAndFlush(new TextWebSocketFrame("ECHO: " + request));
+        }
+        if (frame instanceof BinaryWebSocketFrame) {
+            // 处理二进制消息
+            ByteBuf content = frame.content();
+            byte[] data = new byte[content.readableBytes()];
+            content.readBytes(data);
+            System.out.println("二进制数据长度: " + data.length);
+            // 返回二进制数据（如图片原样返回）
+            ctx.writeAndFlush(new BinaryWebSocketFrame(content.retain()));
+        }
     }
 
     @Override
     public void channelInactive(ChannelHandlerContext ctx) {
         log.info("客户端断开连接");
         saveAndClose(ctx);
+    }
+
+    /**
+     * 清理资源
+     */
+    @Override
+    public void handlerRemoved(ChannelHandlerContext ctx) {
+        if (this.vad.decoder != null) {
+            this.vad.decoder.close();
+        }
+        if (this.clientAudioBuffer != null && this.clientAudioBuffer.refCnt() > 0) {
+            this.clientAudioBuffer.release();
+        }
     }
 
     /**
